@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Melange37 ERP</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Melange37 ERP</h1>
+      <p>주문당 비용 및 순수익 계산 대시보드</p>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" id="sidebar"></aside>
+      <section class="content" id="content"></section>
+    </main>
+
+    <template id="materials-template">
+      <section>
+        <h2>재료 주문 테이블</h2>
+        <form id="materials-form" class="form-grid">
+          <input name="vendor" placeholder="구매처 이름" required />
+          <input name="materialName" placeholder="재료 이름" required />
+          <input name="category" placeholder="주문 카테고리" required />
+          <input name="quantity" type="number" min="0.001" step="0.001" placeholder="갯수" required />
+          <input name="orderCost" type="number" min="0" step="0.001" placeholder="주문 비용" required />
+          <input name="cardFee" type="number" min="0" step="0.001" placeholder="카드 수수료" required />
+          <input name="shippingPerUnit" type="number" min="0" step="0.001" placeholder="개당 배송비" required />
+          <button type="submit">추가</button>
+        </form>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>구매처</th><th>재료</th><th>카테고리</th><th>갯수</th><th>주문 비용</th><th>카드 수수료</th><th>개당 배송비</th><th>개당 원가</th><th>총 비용</th><th>관리</th>
+              </tr>
+            </thead>
+            <tbody id="materials-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </template>
+
+    <template id="packages-template">
+      <section>
+        <h2>패키지 비용 테이블</h2>
+        <form id="packages-form" class="form-grid">
+          <input name="productType" placeholder="상품 종류 (Earring/Necklace...)" required />
+          <input name="component" placeholder="패키지 구성 요소" required />
+          <input name="costPerUnit" type="number" min="0" step="0.001" placeholder="개당 비용" required />
+          <button type="submit">추가</button>
+        </form>
+        <p class="hint">상품 종류별 전체 패키지 비용은 자동 합산됩니다.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>상품 종류</th><th>구성 요소</th><th>개당 비용</th><th>관리</th></tr>
+            </thead>
+            <tbody id="packages-body"></tbody>
+          </table>
+        </div>
+        <h3>상품 종류별 합계</h3>
+        <ul id="package-summary" class="summary-list"></ul>
+      </section>
+    </template>
+
+    <template id="products-template">
+      <section>
+        <h2>상품 제작 테이블</h2>
+        <form id="products-form" class="form-grid">
+          <input name="productType" placeholder="상품 종류" required />
+          <input name="productName" placeholder="상품 명 (예: ED #1)" required />
+          <button type="button" id="add-material-usage">재료 구성 추가</button>
+          <button type="submit">추가</button>
+          <div id="material-usage-list" class="nested-list"></div>
+        </form>
+
+        <div id="product-type-filters" class="filter-tabs"></div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>상품 종류</th><th>상품 명</th><th>재료 구성</th><th>패키지 비용</th><th>개당 제작비</th><th>관리</th></tr>
+            </thead>
+            <tbody id="products-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </template>
+
+    <template id="prices-template">
+      <section>
+        <h2>상품 가격 테이블</h2>
+        <form id="prices-form" class="form-grid">
+          <select name="productId" id="price-product-select" required></select>
+          <input name="listPrice" type="number" min="0" step="0.001" placeholder="상품 정가" required />
+          <input name="discountPct" type="number" min="0" max="100" step="0.001" placeholder="할인 %" required />
+          <button type="submit">추가</button>
+        </form>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>상품</th><th>정가</th><th>할인 %</th><th>할인가</th><th>할인가 순수익</th><th>관리</th></tr>
+            </thead>
+            <tbody id="prices-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </template>
+
+    <template id="inventory-template">
+      <section>
+        <h2>재료 재고 관리 테이블</h2>
+        <form id="base-stock-form" class="form-grid">
+          <input name="materialName" placeholder="재료 이름" required />
+          <input name="baseStock" type="number" min="0" step="0.001" placeholder="기본 재고량" required />
+          <button type="submit">기본 재고 추가/수정</button>
+        </form>
+
+        <form id="sales-form" class="form-grid">
+          <select name="period" required>
+            <option value="day">일별</option>
+            <option value="week">주별</option>
+            <option value="month">월별</option>
+          </select>
+          <select name="productId" id="sales-product-select" required></select>
+          <input name="quantity" type="number" min="0.001" step="0.001" placeholder="판매량" required />
+          <button type="submit">판매 입력</button>
+        </form>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>재료</th><th>기본 재고량</th><th>사용량</th><th>남은 재고량</th></tr>
+            </thead>
+            <tbody id="inventory-body"></tbody>
+          </table>
+        </div>
+
+        <h3>판매 내역</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>구분</th><th>상품</th><th>판매량</th><th>관리</th></tr></thead>
+            <tbody id="sales-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </template>
+
+    <template id="scenario-template">
+      <section>
+        <h2>예상 수익 시나리오</h2>
+        <form id="scenario-form" class="form-grid">
+          <select name="productId" id="scenario-product-select" required></select>
+          <input name="quantity" type="number" min="0.001" step="0.001" placeholder="예상 판매 수량" required />
+          <button type="submit">시나리오 추가</button>
+        </form>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>상품</th><th>예상 판매 수량</th><th>단위 순수익</th><th>예상 순수익</th><th>관리</th></tr></thead>
+            <tbody id="scenario-body"></tbody>
+          </table>
+        </div>
+        <h3 id="scenario-total"></h3>
+      </section>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>

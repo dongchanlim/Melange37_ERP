@@ -1,0 +1,32 @@
+:root {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --muted: #475569;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Arial, sans-serif; background: var(--bg); color: var(--text); }
+header { padding: 16px 24px; background: #1e293b; color: white; }
+header h1 { margin: 0; font-size: 1.4rem; }
+header p { margin: 6px 0 0; color: #cbd5e1; }
+.layout { display: grid; grid-template-columns: 250px 1fr; min-height: calc(100vh - 88px); }
+.sidebar { border-right: 1px solid var(--border); padding: 16px; background: var(--card); }
+.sidebar button { width: 100%; margin-bottom: 8px; padding: 10px; border: 1px solid var(--border); background: white; cursor: pointer; border-radius: 8px; }
+.sidebar button.active { background: #0ea5e9; color: #fff; border-color: #0ea5e9; }
+.content { padding: 20px; overflow: auto; }
+section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin-bottom: 12px; }
+.form-grid input, .form-grid select, .form-grid button { padding: 8px; border: 1px solid #cbd5e1; border-radius: 8px; }
+.form-grid button { cursor: pointer; background: #0f766e; color: white; border-color: #0f766e; }
+.table-wrap { overflow: auto; margin-top: 8px; }
+table { width: 100%; border-collapse: collapse; min-width: 700px; }
+th, td { border-bottom: 1px solid var(--border); padding: 8px; text-align: left; }
+.hint { color: var(--muted); }
+.summary-list { display: grid; gap: 6px; padding-left: 16px; }
+.filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.filter-tabs button { border: 1px solid var(--border); padding: 6px 12px; border-radius: 999px; background: white; cursor: pointer; }
+.nested-list { border: 1px dashed var(--border); padding: 8px; border-radius: 8px; grid-column: 1/-1; }
+.material-usage-row { display: grid; grid-template-columns: 1fr 120px auto; gap: 8px; margin-bottom: 6px; }
+.row-actions button { margin-right: 4px; background: #e2e8f0; color: #111827; border: none; }
+.category-badge { padding: 4px 8px; border-radius: 6px; color: #111827; display: inline-block; }
